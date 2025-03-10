@@ -11,5 +11,6 @@
     <ProjectReference Include="..\..\src\DotNetty.Buffers\DotNetty.Buffers.csproj" />
     <ProjectReference Include="..\..\src\DotNetty.Transport\DotNetty.Transport.csproj" />
     <ProjectReference Include="..\..\src\DotNetty.Codecs\DotNetty.Codecs.csproj" />
+    <ProjectReference Include="..\Examples.Common\Examples.Common.csproj" />
   </ItemGroup>
 </Project>

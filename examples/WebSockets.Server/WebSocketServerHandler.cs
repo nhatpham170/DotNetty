@@ -24,14 +24,44 @@ namespace WebSockets.Server
         WebSocketServerHandshaker handshaker;
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, object msg)
-        {
+        {            
             if (msg is IFullHttpRequest request)
             {
                 this.HandleHttpRequest(ctx, request);
             }
             else if (msg is WebSocketFrame frame)
             {
-                this.HandleWebSocketFrame(ctx, frame);
+                this.HandleWebSocketFrame(ctx, msg as WebSocketFrame);
+            }
+        }
+        public override void ChannelActive(IChannelHandlerContext context)
+        {
+            try
+            {
+                //Global.DictChannels[context.Channel.Id.ToString()] = context.Channel;
+            }
+            catch (Exception ex)
+            {
+
+                //ExceptionHandler.ExceptionProcess(ex);
+            }
+        }
+        public override void ChannelInactive(IChannelHandlerContext context)
+        {
+            try
+            {
+                string channelId = context.Channel.Id.ToString();
+                IChannelHandlerContext tmp;
+                IChannel channel;
+                //Global.DictChannels.TryRemove(channelId, out channel);
+            }
+            catch (Exception ex)
+            {
+                //ExceptionHandler.ExceptionProcess(ex);
+            }
+            finally
+            {
+                base.ChannelInactive(context);
             }
         }
 
@@ -100,6 +130,7 @@ namespace WebSockets.Server
                 ctx.WriteAsync(new PongWebSocketFrame((IByteBuffer)frame.Content.Retain()));
                 return;
             }
+            
 
             if (frame is TextWebSocketFrame)
             {

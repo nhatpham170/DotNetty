@@ -87,6 +87,7 @@ namespace WebSockets.Server
 
                 bootstrap
                     .Option(ChannelOption.SoBacklog, 8192)
+                    .Option(ChannelOption.SoKeepalive, true)
                     .ChildHandler(new ActionChannelInitializer<IChannel>(channel =>
                     {
                         IChannelPipeline pipeline = channel.Pipeline;

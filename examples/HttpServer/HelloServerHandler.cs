@@ -73,7 +73,9 @@ namespace HttpServer
                     break;
                 case "/json":
                     byte[] json = Encoding.UTF8.GetBytes(NewMessage().ToJsonFormat());
+                    byte[] json2 = Encoding.UTF8.GetBytes(NewMessage().ToJsonFormat());
                     this.WriteResponse(ctx, Unpooled.WrappedBuffer(json), TypeJson, JsonClheaderValue);
+                    this.WriteResponse(ctx, Unpooled.WrappedBuffer(json2), TypeJson, JsonClheaderValue);
                     break;
                 default:
                     var response = new DefaultFullHttpResponse(HttpVersion.Http11, HttpResponseStatus.NotFound, Unpooled.Empty, false);
@@ -94,7 +96,11 @@ namespace HttpServer
             headers.Set(ContentLengthEntity, contentLength);
 
             // Close the non-keep-alive connection after the write operation is done.
-            ctx.WriteAsync(response);
+            ctx.WriteAndFlushAsync(response).Wait();
+            byte[] json = Encoding.UTF8.GetBytes(NewMessage().ToJsonFormat());
+            ctx.WriteAndFlushAsync(json).Wait();
+
+            //ctx.WriteAndFlushAsync(response);
         }
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception) => context.CloseAsync();
